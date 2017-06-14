@@ -76,6 +76,9 @@ var sendMessage = function(recipientId, message){
   }, function(error, response, body){
     if(error){
       console.log("Error sending message: " + response.error);
+    } else{
+      console.log(response);
+      console.log(body);
     }
   })
 }
