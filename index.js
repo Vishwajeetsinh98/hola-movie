@@ -93,7 +93,7 @@ var processMessage = function(event){
     var message = event.message;
     var senderId = event.sender.id;
 
-    console.log('Received Message from ' +senderId + ' at: ' +ew Date().toISOString());
+    console.log('Received Message from ' +senderId + ' at: ' +new Date().toISOString());
     console.log('Message is: ' + message);
 
     if(message.text){
