@@ -61,9 +61,7 @@ var processPostback = function(event){
         name = bodyObj.first_name;
         greeting = 'Hi ' + name + '.';
       }
-      var message = greeting + 'My name is Hola Movie! I can tell you various details regarding movies. What movie would you like to know about?';
-      console.log(message);
-      console.log(senderId);
+      var message = greeting + ' My name is Hola Movie! I can tell you various details regarding movies. What movie would you like to know about?';
       sendMessage(senderId, {text: message});
     });
   }
@@ -74,13 +72,13 @@ var sendMessage = function(recipientId, message){
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
     method: 'POST',
-    json: {id: recipientId, message: message}
+    json: {recipient: {id: recipientId}, message: message}
   }, function(error, response, body){
     if(error){
       console.log("Error sending message: " + response.error);
     } else{
       // console.log(response);
-      // console.log(body);
+      console.log(body);
     }
   })
 }
