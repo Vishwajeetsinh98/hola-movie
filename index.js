@@ -62,7 +62,7 @@ var processPostback = function(event){
         greeting = 'Hi ' + name + '.';
       }
       var message = greeting + 'My name is Hola Movie! I can tell you various details regarding movies. What movie would you like to know about?';
-      sendMessage(senderId, {text: mesage});
+      sendMessage(senderId, {text: message});
     });
   }
 }
