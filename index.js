@@ -62,6 +62,8 @@ var processPostback = function(event){
         greeting = 'Hi ' + name + '.';
       }
       var message = greeting + 'My name is Hola Movie! I can tell you various details regarding movies. What movie would you like to know about?';
+      console.log(message);
+      console.log(senderId);
       sendMessage(senderId, {text: message});
     });
   }
@@ -77,8 +79,8 @@ var sendMessage = function(recipientId, message){
     if(error){
       console.log("Error sending message: " + response.error);
     } else{
-      console.log(response);
-      console.log(body);
+      // console.log(response);
+      // console.log(body);
     }
   })
 }
