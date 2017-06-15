@@ -174,7 +174,7 @@ function findMovie(userId, movieTitle) {
                         elements: [{
                           title: movieObj.title,
                           subtitle: "Is this the movie you are looking for?",
-                          image_url: mov.poster_url,
+                          image_url: update.poster_url,
                           buttons: [{
                             type: "postback",
                             title: "Yes",
