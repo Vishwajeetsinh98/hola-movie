@@ -180,8 +180,8 @@ function findMovie(userId, movieTitle) {
           }
         });
       } else {
-          console.log(movieObj.Error);
-          sendMessage(userId, {text: movieObj.Error});
+          // console.log(movieObj.Error);
+          sendMessage(userId, {text: 'Something went wrong. Try again.'});
       }
     } else {
       sendMessage(userId, {text: "Something went wrong. Try again."});
