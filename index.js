@@ -108,9 +108,10 @@ var processMessage = function(event){
       switch (formattedMsg) {
         case 'plot':
         case 'date':
-        case 'runTime':
+        case 'runtime':
         case 'cast':
         case 'rating':
+        case 'director':
           getMovieDetail(senderId, formattedMsg);
           break;
         default:
