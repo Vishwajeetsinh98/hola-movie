@@ -128,7 +128,11 @@ var getMovieDetail = function(userId, field){
     if(err){
       sendMessage(userId, {text: 'Something went wrong. Try again'});
     } else{
-      sendMessage(userId, {text: movie[field]});
+      if(field == 'cast'){
+        sendMessage(userId, {text: movie.cast.join()});
+      } else{
+        sendMessage(userId, {text: movie[field]});
+      }
     }
   })
 }
