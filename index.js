@@ -105,7 +105,6 @@ var processMessage = function(event){
         case 'plot':
         case 'date':
         case 'runTime':
-        case 'director':
         case 'cast':
         case 'rating':
           getMovieDetail(senderId, formattedMsg);
@@ -131,59 +130,75 @@ var getMovieDetail = function(userId, field){
 }
 
 function findMovie(userId, movieTitle) {
+  var cast = [];
+  var movieObj = {};
+  var director;
   request("https://api.themoviedb.org/3/search/movie?api_key="+process.env.MOVIE_API_KEY+"&language=en-US&query="+movieTitle+"&page=1&include_adult=true" + movieTitle, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       var reqBody = JSON.parse(body);
-      var movieObj = reqBody.results ? reqBody.results[0] : null;
-      console.log(movieObj);
-      if (movieObj.success) {
-
-        var query = {user_id: userId};
-        var update = {
-          user_id: userId,
-          title: movieObj.Title,
-          plot: movieObj.Plot,
-          date: movieObj.Released,
-          runtime: movieObj.Runtime,
-          director: movieObj.Director,
-          cast: movieObj.Actors,
-          rating: movieObj.imdbRating,
-          poster_url:movieObj.Poster
-        };
-        var options = {upsert: true};
-        Movie.findOneAndUpdate(query, update, options, function(err, mov) {
-          if (err) {
-            console.log("Database error: " + err);
-          } else {
-            message = {
-              attachment: {
-                type: "template",
-                payload: {
-                  template_type: "generic",
-                  elements: [{
-                    title: movieObj.Title,
-                    subtitle: "Is this the movie you are looking for?",
-                    image_url: movieObj.Poster === "N/A" ? "http://placehold.it/350x150" : movieObj.Poster,
-                    buttons: [{
-                      type: "postback",
-                      title: "Yes",
-                      payload: "Correct"
-                    }, {
-                      type: "postback",
-                      title: "No",
-                      payload: "Incorrect"
-                    }]
-                  }]
-                }
-              }
-            };
-            sendMessage(userId, message);
+      var movieId = reqBody.results[0].id;
+      request("https://api.themoviedb.org/3/movie/"+mpvieId+"/credits?api_key="+process.env.MOVIE_API_KEY, function(error, response, body){
+        if(error){
+          sendMessage(userId, {text: 'Something went wrong. Please try again.'});
+        } else{
+          var castBody = JSON.parse(body).cast;
+          director = JSON.parse(body).crew[0].name;
+          for(var i in castBody){
+            cast.push(castBody[i].name);
           }
-        });
-      } else {
-          // console.log(movieObj.Error);
-          sendMessage(userId, {text: 'Something went wrong. Try again.'});
-      }
+          request("https://api.themoviedb.org/3/movie/"+movieId+"?api_key="+process.env.MOVIE_API_KEY, function(error, response, body){
+            movieObj = JSON.parse(body);
+            if (movieObj) {
+              var query = {user_id: userId};
+              var update = {
+                user_id: userId,
+                title: movieObj.title,
+                plot: movieObj.overview,
+                date: movieObj.release_date,
+                rating: movieObj.vote_average,
+                poster_url: movieObj.poster_path ? "http://image.tmdb.org/t/p/w500" + movieObj.poster_path : 'http://placehold.it/350',
+                runtime: movieObj.runtime,
+                cast: cast,
+                director: director
+              };
+              var options = {upsert: true};
+              Movie.findOneAndUpdate(query, update, options, function(err, mov) {
+                if (err) {
+                  console.log("Database error: " + err);
+                } else {
+                  message = {
+                    attachment: {
+                      type: "template",
+                      payload: {
+                        template_type: "generic",
+                        elements: [{
+                          title: movieObj.title,
+                          subtitle: "Is this the movie you are looking for?",
+                          image_url: mov.poster_url,
+                          buttons: [{
+                            type: "postback",
+                            title: "Yes",
+                            payload: "Correct"
+                          }, {
+                            type: "postback",
+                            title: "No",
+                            payload: "Incorrect"
+                          }]
+                        }]
+                      }
+                    }
+                  };
+                  sendMessage(userId, message);
+                }
+              });
+            } else {
+                // console.log(movieObj.Error);
+                sendMessage(userId, {text: 'Something went wrong. Try again.'});
+            }
+          })
+        }
+      })
+
     } else {
       sendMessage(userId, {text: "Something went wrong. Try again."});
     }

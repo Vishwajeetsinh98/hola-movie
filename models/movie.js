@@ -6,9 +6,9 @@ var movie = new mongoose.Schema({
   plot: {type: String},
   date: {type: String},
   runtime: {type: String},
-  director: {type: String},
-  cast: {type: String},
+  cast: {type: [String]},
   rating: {type: String},
-  poster_url: {type: String}
+  poster_url: {type: String},
+  director: String
 });
 module.exports = mongoose.model('Movie', movie);
