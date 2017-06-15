@@ -131,10 +131,13 @@ var getMovieDetail = function(userId, field){
 }
 
 function findMovie(userId, movieTitle) {
-  request("http://www.omdbapi.com/?type=movie&amp;t=" + movieTitle, function (error, response, body) {
+  request("
+https://api.themoviedb.org/3/search/movie?api_key="+process.env.MOVIE_API_KEY+"&language=en-US&query="+movieTitle+"&page=1&include_adult=true" + movieTitle, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      var movieObj = JSON.parse(body);
-      if (movieObj.Response === "True") {
+      var movieObj = JSON.parse(body.results[0]);
+      console.log(movieObj);
+      if (movieObj) {
+
         var query = {user_id: userId};
         var update = {
           user_id: userId,
@@ -182,7 +185,6 @@ function findMovie(userId, movieTitle) {
           sendMessage(userId, {text: movieObj.Error});
       }
     } else {
-      console.log('Error Here');
       sendMessage(userId, {text: "Something went wrong. Try again."});
     }
   });
