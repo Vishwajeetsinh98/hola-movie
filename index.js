@@ -137,7 +137,7 @@ function findMovie(userId, movieTitle) {
     if (!error && response.statusCode === 200) {
       var reqBody = JSON.parse(body);
       var movieId = reqBody.results[0].id;
-      request("https://api.themoviedb.org/3/movie/"+mpvieId+"/credits?api_key="+process.env.MOVIE_API_KEY, function(error, response, body){
+      request("https://api.themoviedb.org/3/movie/"+movieId+"/credits?api_key="+process.env.MOVIE_API_KEY, function(error, response, body){
         if(error){
           sendMessage(userId, {text: 'Something went wrong. Please try again.'});
         } else{
