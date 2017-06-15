@@ -133,7 +133,7 @@ var getMovieDetail = function(userId, field){
 function findMovie(userId, movieTitle) {
   request("https://api.themoviedb.org/3/search/movie?api_key="+process.env.MOVIE_API_KEY+"&language=en-US&query="+movieTitle+"&page=1&include_adult=true" + movieTitle, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      console.log(body.results);
+      console.log(body);
       var movieObj = body.results ? body.results[0] : null;
       if (movieObj) {
 
