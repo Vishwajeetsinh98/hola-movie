@@ -69,6 +69,10 @@ var processPostback = function(event){
       var message = greeting + ' My name is Hola Movie' + ((name == 'Jigyasa') ? ' and I love you! ' : '') +' I can tell you various details regarding movies. What movie would you like to know about?';
       sendMessage(senderId, {text: message});
     });
+  } else if(payload == 'Correct'){
+    sendMessage(senderId, {text: "Awesome! What would you like to find out? Enter 'plot', 'date', 'runtime', 'director', 'cast' or 'rating' for the various details."});
+  } else if(payload == 'Incorrect'){
+    sendMessage(senderId, {text: "Oops! Sorry about that. Try using the exact title of the movie"});
   }
 }
 
